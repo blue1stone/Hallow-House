@@ -1,4 +1,4 @@
-The code (except the code taken from the internet) and art are distributed under the following license:
+The code (except the code taken from the internet), art and sound are distributed under the following license:
 
 MIT License
 
