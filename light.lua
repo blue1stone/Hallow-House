@@ -5,7 +5,7 @@ function Light:init()
 	self.x = WIDTH / 2
 	self.y = HEIGHT / 2
 	self.IMG = love.graphics.newImage("art/light.png")
-	self.SCALE = 7
+	self.SCALE = 12
 	self.W = self.IMG:getWidth() * self.SCALE
 	self.H = self.IMG:getHeight() * self.SCALE
 	self.BGCOLOR = {0,8,22, 254}
