@@ -80,54 +80,54 @@ function love.load()
 	
 	Inst = UI:new()
 	Inst.labels[1] = UI.new_label(WIDTH/2, 5, "INSTRUCTIONS", {250,50,50,255}, menuFont, "center")
-	Inst.labels[2] = UI.new_label(WIDTH/2, HEIGHT/7*1+5, "Left cl. : Toggle flashlight", {250,50,50,255}, menuFont, "center")
-	Inst.labels[3] = UI.new_label(WIDTH/2, HEIGHT/7*2+5, "Right cl. : Flash monster", {250,50,50,255}, menuFont, "center")
+	Inst.labels[2] = UI.new_label(WIDTH/2, HEIGHT/7*1+5, "Use your flashlight", {250,50,50,255}, menuFont, "center")
+	Inst.labels[3] = UI.new_label(WIDTH/2, HEIGHT/7*2+5, "to flash the monsters.", {250,50,50,255}, menuFont, "center")
 	Inst.labels[4] = UI.new_label(WIDTH/2, HEIGHT/7*3+5, "Watch your battery and", {250,50,50,255}, menuFont, "center")
 	Inst.labels[5] = UI.new_label(WIDTH/2, HEIGHT/7*4+5, "survive until 6am.", {250,50,50,255}, menuFont, "center")
 	Inst.labels[6] = UI.new_label(WIDTH/2, HEIGHT/7*5+5, "Good luck...", {250,50,50,255}, menuFont, "center")
 	Inst.labels[7] = UI.new_label(WIDTH/2, HEIGHT/7*6+5, "START", {250,50,50,255}, menuFont, "center")
 	Inst.buttons[1] = UI.new_button(WIDTH/2-160, HEIGHT/7*6+5-5, "art/button.png", function() inInst = false; inPlay = true; Room:loadRoom("r1") end, 5)
+	
+	Play = UI:new()
+	Play.buttons[1] = UI.new_button(5, HEIGHT/2+35, "art/button_light.png", function() if Light.power>0 then Light.isOn = not Light.isOn; Light.toggleSound:play(); end end, 5)
+	Play.buttons[2] = UI.new_button(5, HEIGHT/2+HEIGHT/4+20, "art/button_blink.png", function() if (Light.power > 0) and (Light.blinkTime <= -4) and (Light.isOn) then Light:blink(); Light.blinkSound:play(); end end, 5)
+	
 end
 
-function love.mousepressed(x, y, button)
-	local mouseX, mouseY = love.mouse.getPosition()
+function love.touchpressed(id, x, y)
+	local mouseX, mouseY = x, y
 	if inPlay then
 		if not Room.activeRoom.scaringMonster then
-			if (button == 1) and (Light.power > 0) then
-				Light.isOn = not Light.isOn
-				Light.toggleSound:play()
-			end
-			if (button == 2) and (Light.power > 0) and (Light.blinkTime <= -4) and (Light.isOn) then
-				Light:blink()
-				Light.blinkSound:play()
-			end
+			Play:update(mouseX, mouseY)
 		end
 	end
 	if inMenu then
-		if button == 1 then
-			Menu:update(mouseX, mouseY)
-		end
+		Menu:update(mouseX, mouseY)
 	end
 	if inWin then
-		if button == 1 then
-			Win:update(mouseX, mouseY)
-		end
+		Win:update(mouseX, mouseY)
 	end
 	if inLost then
-		if button == 1 then
-			Lost:update(mouseX, mouseY)
-		end
+		Lost:update(mouseX, mouseY)
 	end
 	if inInst then
-		if button == 1 then
-			Inst:update(mouseX, mouseY)
-		end
+		Inst:update(mouseX, mouseY)
 	end
 end
 
 function love.update(dt)
-	local mouseX, mouseY = love.mouse.getPosition()
+	local touches = love.touch.getTouches()
+	local mouseX, mouseY
+	if touches[1] then
+		mouseX, mouseY = love.touch.getPosition(touches[1])
+	end
 	if inPlay then
+		if touches[1] then
+			if (mouseX < 165) and (mouseY > HEIGHT/2+35) then
+				mouseX = nil
+				mouseY = nil
+			end
+		end
 		Room:update(dt)
 		Light:update(mouseX, mouseY, dt)
 		HUD:update(dt)
@@ -144,6 +144,7 @@ function love.draw()
 		end
 		if not Room.activeRoom.scaringMonster then
 			HUD:draw()
+			Play:draw()
 		end
 	end
 	if inMenu then
