@@ -43,7 +43,7 @@ function HUD:draw()
 	end
 	hours = "0"..hours
 	love.graphics.print(hours..":"..mins.." am", 20, 10)
-	local cool = Light.blinkTime+4-(Light.blinkTime+4)%1
+	local cool = Light.blinkTime+5-(Light.blinkTime+5)%1
 	if cool < 0 then
 		cool = 0
 	end
